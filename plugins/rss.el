@@ -1,4 +1,4 @@
-(setq rmh-elfeed-org-files (list "~/.dotfiles/private/org/rss.org"))
+(setq rmh-elfeed-org-files (list "~/.dotfiles/private/org/config/rss.org"))
 
 
 (setq-default elfeed-search-filter "@6months")

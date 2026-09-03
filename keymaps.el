@@ -68,7 +68,7 @@
          (title (and entry (elfeed-entry-title entry)))
          (url (+user/get-url-at-point))
          (title (or title (and url (file-name-nondirectory (directory-file-name url))) "untitled"))
-         (file "~/.dotfiles/private/org/links.md"))
+         (file "~/.dotfiles/private/org/bookmarks/rss.md"))
     (unless url
       (user-error "No URL at point or in elfeed entry"))
     (with-temp-buffer
