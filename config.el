@@ -25,12 +25,12 @@
 ;; doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 
 (if (string= (getenv "NIXOS_HOST") "debian")
-    (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 24 :weight 'semi-light)
-          doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 36)
-          doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 24))
-  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 18 :weight 'semi-light)
-        doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 24)
-        doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 18)))
+    (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'semi-light)
+          doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 21)
+          doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 15))
+  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 12 :weight 'semi-light)
+        doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 18)
+        doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 12)))
 
 (defun +user/init-cjk-fonts ()
   "Add fallback CJK fonts to the default fontset after Doom sets up fonts."
@@ -54,6 +54,9 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
+
+(when (memq 'linux doom-system)
+  (setq fcitx-remote-command "fcitx5-remote"))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!

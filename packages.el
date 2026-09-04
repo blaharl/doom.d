@@ -57,3 +57,5 @@
 (package! harpoon)
 (package! oj)
 (package! nov)
+(when (memq 'linux doom-system)
+  (package! fcitx))
