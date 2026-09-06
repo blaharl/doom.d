@@ -27,9 +27,11 @@
 
 (defun +user/get-url-at-point ()
   "Return the URL at point, or the current elfeed entry's link."
-  (or (when-let* ((entry (+user/elfeed-entry)))
-        (elfeed-entry-link entry))
-      (thing-at-point 'url t)))
+  (or (when (fboundp 'shr-url-at-point)
+        (shr-url-at-point nil))
+      (thing-at-point 'url t)
+      (when-let* ((entry (+user/elfeed-entry)))
+        (elfeed-entry-link entry))))
 
 (defun +user/mpv ()
   "mpv link"
