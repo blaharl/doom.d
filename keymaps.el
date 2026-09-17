@@ -1,22 +1,29 @@
 (map! :leader
       (:prefix ("o" . "open")
-       :desc "Open URL in EWW (new buffer)" "l" #'+user/eww-open-in-new-buffer
+       :desc "Open URL/HTML in EWW (new buffer)" "l" #'+user/eww-open-in-new-buffer
        :desc "yt-dlp" "y" #'+user/yt-dlp
        :desc "yt-dlp sub" "s" #'+user/yt-dlp-sub
-       :desc "mpv" "v" #'+user/mpv
+       :desc "Play URL/video with mpv" "v" #'+user/mpv
        :desc "Save link" "m" #'+user/save-link))
 
 (defun +user/eww-open-in-new-buffer ()
-  "Open the URL at point in a new EWW buffer on the right (vertical 50% split)."
+  "Open a Dired HTML file or URL in a new EWW buffer on the right."
   (interactive)
   (require 'eww)
-  (unwind-protect
-      (progn
-        (advice-remove #'eww '+eww-open-in-fullscreen-if-interactive-a)
-        (with-popup-rules! '(((or "^\\*eww" (major-mode . eww-mode))
-                              :side right :size 0.5 :select t :quit other :ttl nil))
-          (eww-open-in-new-buffer)))
-    (advice-add #'eww :around #'+eww-open-in-fullscreen-if-interactive-a)))
+  (let ((file (and (derived-mode-p 'dired-mode)
+                   (dired-get-filename nil t))))
+    (unwind-protect
+        (progn
+          (advice-remove #'eww '+eww-open-in-fullscreen-if-interactive-a)
+          (with-popup-rules! '(((or "^\\*eww" (major-mode . eww-mode))
+                                :side right :size 0.5 :select t :quit other :ttl nil))
+            (if (and file
+                     (file-regular-p file)
+                     (member (downcase (or (file-name-extension file) ""))
+                             '("htm" "html" "png" "jpeg" "jpg" "gif" "webp")))
+                (eww-open-file file t)
+              (eww-open-in-new-buffer))))
+      (advice-add #'eww :around #'+eww-open-in-fullscreen-if-interactive-a))))
 
 
 (defun +user/elfeed-entry ()
@@ -34,14 +41,31 @@
         (elfeed-entry-link entry))))
 
 (defun +user/mpv ()
-  "mpv link"
+  "Play a Dired video file with EMPV, or the URL at point with mpv."
   (interactive)
-  (let ((url (+user/get-url-at-point)))
-    (unless url
-      (user-error "No URL at point or in elfeed entry"))
-    (async-shell-command
-     (format "mpv %s"
-             (shell-quote-argument url)))))
+  (let ((file (and (derived-mode-p 'dired-mode)
+                   (dired-get-filename nil t))))
+    (if (and file
+             (file-regular-p file)
+             (progn
+               (require 'empv)
+               (member (downcase (or (file-name-extension file) ""))
+                       (mapcar #'downcase empv-video-file-extensions))))
+        (let ((empv-mpv-args
+               (seq-remove (lambda (arg) (equal arg "--no-video"))
+                           empv-mpv-args)))
+          (empv-play file)
+          (empv--send-command
+           '("get_property" "video")
+           (lambda (video)
+             (when (eq video :json-false)
+               (empv-toggle-video)))))
+      (let ((url (+user/get-url-at-point)))
+        (unless url
+          (user-error "No URL at point or in elfeed entry"))
+        (async-shell-command
+         (format "mpv %s"
+                 (shell-quote-argument url)))))))
 
 (defun +user/yt-dlp ()
   "dl link with yt-dlp to ~/Videos/emacs/."
@@ -50,7 +74,7 @@
     (unless url
       (user-error "No URL at point or in elfeed entry"))
     (async-shell-command
-     (format "yt-dlp -P ~/Videos/emacs/ %s"
+     (format "yt-dlp -P ~/Videos/emacs/ --sponsorblock-remove all %s"
              (shell-quote-argument url)))))
 
 (defun +user/yt-dlp-sub ()
