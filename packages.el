@@ -59,3 +59,6 @@
 (package! nov)
 (when (memq 'linux doom-system)
   (package! fcitx))
+(package! typst-ts-mode
+  :recipe (:host codeberg
+           :repo "meow_king/typst-ts-mode"))

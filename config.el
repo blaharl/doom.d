@@ -94,5 +94,6 @@
 ;; they are implemented.
 
 (load! "keymaps")
+(load! "lsp")
 (load! "plugins/init")
 (load! "private/mail")
