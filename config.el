@@ -24,13 +24,13 @@
 ;; (setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;; doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 
-(if (string= (getenv "NIXOS_HOST") "debian")
-    (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'semi-light)
-          doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 21)
-          doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 15))
-  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 12 :weight 'semi-light)
-        doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 18)
-        doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 12)))
+;; (if (string= (getenv "NIXOS_HOST") "debian")
+(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'semi-light)
+      doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 21)
+      doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 15))
+;; (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 15 :weight 'semi-light)
+;;       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 21)
+;;       doom-serif-font (font-spec :family "JetBrainsMono Nerd Font" :size 15)))
 
 (defun +user/init-cjk-fonts ()
   "Add fallback CJK fonts to the default fontset after Doom sets up fonts."
