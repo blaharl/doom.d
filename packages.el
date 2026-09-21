@@ -57,6 +57,8 @@
 (package! harpoon)
 (package! oj)
 (package! nov)
+(when (getenv "NIXOS_HOST")
+  (package! pdf-tools :built-in t))
 (when (memq 'linux doom-system)
   (package! fcitx))
 (package! typst-ts-mode
